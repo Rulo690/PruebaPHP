@@ -40,9 +40,16 @@ if (isset($_SESSION['resultado'])) {
         <label for="actualizar">Actualizar</label><br>
 
         <input type="radio" id="valorTotal" name="accion" value="valorTotal">
-        <label for="valorTotal">valorTotal</label><br>
+        <label for="valorTotal">Valor total</label><br>
         
-        <input type="submit" value="Enviar">
+        <input type="radio" id="filtrarPorValor" name="accion" value="filtrarPorValor">
+        <label for="filtrarPorValor">Filtrar por valor</label><br>
+
+        <input type="radio" id="valorPromedio" name="accion" value="valorPromedio">
+        <label for="valorPromedio">Valor promedio</label><br>
+        
+
+        <input type="submit" value="Aceptar">
     </form>
 
     <form action="funciones.php" method="POST">

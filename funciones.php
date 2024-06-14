@@ -21,6 +21,16 @@ function buscarProductoPorModelo($productos, $modelo) {
     return "Modelo no encontrado.<br>";
 }
 
+function filtrarPorValor($productos, $valor) {
+    $result = '';
+    foreach ($productos as $producto) {
+        if ($producto['valor'] > $valor) {
+            $result .= "Nombre: " . $producto['nombre'] . ", Valor: " . $producto['valor'] . "<br>";
+        }
+    }
+    return $result ? $result : "Ningún producto encontrado con un valor superior a $valor.<br>";
+}
+
 function mostrarProductos($productos) {
     $result = '';
     foreach ($productos as $producto) {
@@ -42,15 +52,29 @@ function actualizarProducto($productos, $nombre, $cantidad, $valor, $modelo) {
     }
     return $productos;
 }
-function calcularValorTotal($productos, $cantidad, $valor) {
-    $resultado2=0;
+function calcularValorTotal($productos) {
+    $resultado = 0;
     foreach ($productos as $producto) {
-        for($i=0;$i<$productos.length;$i++){
-            $resultado1 = $producto['valor'] * $producto['cantidad'];
-            $resultado2 = $resultado2 + $resultado1;
-        }
+        $resultado += $producto['valor'] * $producto['cantidad'];
     }
     return $resultado;
+}
+
+function calcularValorpromedio($productos) {
+    $totalValor = 0;
+    $i = 0;
+    
+    foreach ($productos as $producto) {
+        $totalValor += $producto['valor'] * $producto['cantidad'];
+        $i++;
+    }
+    
+    if ($i > 0) {
+        $promedio = $totalValor / $i;
+        return $promedio;
+    } else {
+        return "No hay productos registrados.";
+    }
 }
 
 // Inicializar el array de usuarios en la sesión
@@ -64,7 +88,7 @@ $resultado = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $accion = $_POST['accion'];
     $nombre = $_POST['nombre'] ?? '';
-    $cantiad = $_POST['cantidad'] ?? '';
+    $cantidad = $_POST['cantidad'] ?? '';
     $modelo = $_POST['modelo'] ?? '';
     $valor = $_POST['valor'] ?? '';
 
@@ -91,6 +115,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $resultado = calcularValorTotal($productos, $cantidad, $valor);
             break;
 
+            case 'filtrarPorValor': 
+                $resultado = filtrarPorValor($productos, $valor);
+            break;
+            
+            case 'valorPromedio': 
+                $resultado = calcularValorpromedio($productos);
+            break;
+            
         case 'limpiar':
             $_SESSION['productos'] = [];
             $resultado = "Resultados limpiados correctamente.<br>";
@@ -107,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 echo buscarProductoPorModelo($productos, $modelo);
 
-// Redirigir de vuelta a index.php
+// Redirigir de vuelta a index.php 
 header("Location: vista.php");
 exit();
 ?>
