@@ -2,13 +2,13 @@
 session_start();
 
 // Definir las funciones
-function agregarUsuario($productos, $nombre, $cantidad, $valor, $modelo) {
-    $productos[] = [
-        'nombre' => $nombre,
-        'cantidad' => $cantidad,
-        'valor' => $valor,
-        'modelo' => $modelo
-    ];
+function agregarProducto($productos, $nombre, $cantidad, $valor, $modelo) {
+   $productos[] = [
+       'nombre' => $nombre,
+       'cantidad' => $cantidad,
+       'valor' => $valor,
+       'modelo' => $modelo
+   ];
     return $productos;
 }
 
@@ -31,15 +31,26 @@ function mostrarProductos($productos) {
     return $result;
 }
 
-function actualizarUsuario($productos, $email, $nombre, $edad) {
+function actualizarProducto($productos, $nombre, $cantidad, $valor, $modelo) {
     foreach ($productos as &$producto) {
-        if ($producto['email'] == $email) {
-            $producto['nombre'] = $nombre;
-            $producto['edad'] = $edad;
+        if ($producto['nombre'] == $nombre) {
+            $producto['cantidad'] = $cantidad;
+            $producto['modelo'] = $modelo;
+            $producto['valor'] = $valor;
             break;
         }
     }
     return $productos;
+}
+function calcularValorTotal($productos, $cantidad, $valor) {
+    $resultado2=0;
+    foreach ($productos as $producto) {
+        for($i=0;$i<$productos.length;$i++){
+            $resultado1 = $producto['valor'] * $producto['cantidad'];
+            $resultado2 = $resultado2 + $resultado1;
+        }
+    }
+    return $resultado;
 }
 
 // Inicializar el array de usuarios en la sesión
@@ -53,13 +64,14 @@ $resultado = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $accion = $_POST['accion'];
     $nombre = $_POST['nombre'] ?? '';
-    $edad = $_POST['edad'] ?? '';
-    $email = $_POST['email'] ?? '';
+    $cantiad = $_POST['cantidad'] ?? '';
+    $modelo = $_POST['modelo'] ?? '';
+    $valor = $_POST['valor'] ?? '';
 
     switch ($accion) {
         case 'agregar':
-            $productos = agregarProducto($productos, $nombre, $edad, $email);
-            $resultado = "Usuario agregado correctamente.<br>";
+            $productos = agregarProducto($productos, $nombre, $cantidad, $valor, $modelo);
+            $resultado = "Producto agregado correctamente.<br>";
             break;
         
         case 'buscar':
@@ -71,8 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
         
         case 'actualizar':
-            $productos = actualizarProducto($productos, $email, $nombre, $edad);
-            $resultado = "Usuario actualizado correctamente.<br>";
+            $productos = actualizarProducto($productos, $nombre, $cantidad, $valor, $modelo);
+            $resultado = "Producto actualizado correctamente.<br>";
+            break;
+
+            case 'valorTotal': 
+                $resultado = calcularValorTotal($productos, $cantidad, $valor);
             break;
 
         case 'limpiar':
@@ -89,7 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['resultado'] = $resultado;
 }
 
+echo buscarProductoPorModelo($productos, $modelo);
+
 // Redirigir de vuelta a index.php
-header("Location: formulario.php");
+header("Location: vista.php");
 exit();
 ?>
