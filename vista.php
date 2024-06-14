@@ -47,6 +47,9 @@ if (isset($_SESSION['resultado'])) {
 
         <input type="radio" id="valorPromedio" name="accion" value="valorPromedio">
         <label for="valorPromedio">Valor promedio</label><br>
+
+        <input type="radio" id="listarModelos" name="accion" value="listarModelos">
+        <label for="listarModelos">Listar Modelos</label><br>
         
 
         <input type="submit" value="Aceptar">

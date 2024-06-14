@@ -52,12 +52,26 @@ function actualizarProducto($productos, $nombre, $cantidad, $valor, $modelo) {
     }
     return $productos;
 }
+
 function calcularValorTotal($productos) {
     $resultado = 0;
     foreach ($productos as $producto) {
         $resultado += $producto['valor'] * $producto['cantidad'];
     }
     return $resultado;
+}
+
+function listarModelos($productos) {
+    $modelos = array();
+    
+    foreach ($productos as $producto) {
+        $modelo = $producto['modelo'];
+        if (!in_array($modelo, $modelos)) {
+            $modelos[] = $modelo;
+        }
+    }
+    
+    return $modelos;
 }
 
 function calcularValorpromedio($productos) {
@@ -121,6 +135,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             case 'valorPromedio': 
                 $resultado = calcularValorpromedio($productos);
+            break;
+
+            case 'listarModelos': 
+                $resultado = listarModelos($productos);
             break;
             
         case 'limpiar':
